@@ -29,16 +29,14 @@ router.get('/photo', async function (ctx, next) {
     ctx.response.status = 304;
   } else {
     ctx.response.lastModified = lastModified;
-    console.log("修改了，返回最新数据")
+    console.log("未命中缓存，返回最新数据")
     await responseFile(txtPath, ctx)
   }
 })
 
 router.post("/", async (ctx, next) => {
   let token = ctx.headers["self-token"]
-  console.log("ctx.headers", token)
   let verifyResult = await tokenTools.verifyToken(token)
-  console.log("ctx.verifyResult", verifyResult)
   if (verifyResult) {
     let data = await httpRequest("post", "http://localhost:9000/users", ctx.request.body)
     if (data) {
